@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProteinLens Guide — Explore Proteins Behind Disease</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --surface2: #f3f0ea;
+  --border: #e2ddd5;
+  --text: #2c2416;
+  --text-mid: #6b5f4e;
+  --text-dim: #a89880;
+  --accent: #c45c2a;
+  --accent-soft: #f5ede6;
+  --accent2: #2a6b8a;
+  --accent2-soft: #e6f0f5;
+  --green: #2a7a4a;
+  --green-soft: #e6f3ec;
+  --warn: #8a5c2a;
+  --warn-soft: #f5ede6;
+  --danger: #8a2a2a;
+  --danger-soft: #f5e6e6;
+  --step-active: #c45c2a;
+  --step-done: #2a7a4a;
+  --step-pending: #d4cec5;
+  --shadow: 0 2px 16px rgba(44,36,22,0.07);
+  --shadow-lg: 0 8px 40px rgba(44,36,22,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Subtle texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c45c2a' fill-opacity='0.025'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* HEADER */
+header {
+  padding: 48px 0 40px;
+  text-align: center;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: var(--accent);
+  font-family: 'Fraunces', serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.logo-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.header-sub {
+  font-size: 1.05rem;
+  color: var(--text-mid);
+  max-width: 480px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+/* PROGRESS STEPS */
+.steps-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 40px 0 48px;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.step-bubble {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: var(--step-pending);
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.step-item.active .step-bubble {
+  background: var(--step-active);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.step-item.done .step-bubble {
+  background: var(--step-done);
+}
+
+.step-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 400;
+  transition: color 0.3s;
+}
+
+.step-item.active .step-label { color: var(--accent); font-weight: 500; }
+.step-item.done .step-label { color: var(--step-done); }
+
+.step-line {
+  width: 60px; height: 2px;
+  background: var(--border);
+  margin: 0 4px;
+  margin-bottom: 28px;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.step-line.done { background: var(--step-done); }
+
+@media (max-width: 480px) {
+  .step-line { width: 32px; }
+  .step-label { font-size: 0.6rem; }
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  animation: cardIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.card-body {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+/* SEARCH */
+.disease-search-wrap {
+  margin-top: 24px;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-weight: 300;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.search-input::placeholder { color: var(--text-dim); }
+
+.disease-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.disease-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 400;
+}
+
+.disease-chip:hover, .disease-chip.selected {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  margin-top: 20px;
+}
+
+.btn-primary:hover { background: #a84d22; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(196,92,42,0.3); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text-mid);
+  border: 1px solid var(--border);
+  margin-top: 12px;
+}
+.btn-secondary:hover { background: var(--border); }
+
+/* STATUS */
+.status-card {
+  background: var(--accent2-soft);
+  border: 1px solid #c0d8e6;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: none;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.status-card.visible { display: flex; }
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid #c0d8e6;
+  border-top-color: var(--accent2);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.status-msg { color: var(--accent2); font-size: 0.9rem; }
+
+/* ERROR */
+.error-card {
+  background: var(--danger-soft);
+  border: 1px solid #e0c0c0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  color: var(--danger);
+  font-size: 0.9rem;
+  display: none;
+  margin-bottom: 24px;
+}
+.error-card.visible { display: block; }
+
+/* RESULT SECTIONS */
+#wizard-results { display: none; }
+#wizard-results.visible { display: block; }
+
+/* STEP 2: PROTEIN IDENTITY */
+.protein-identity {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 520px) {
+  .protein-identity { grid-template-columns: 1fr; }
+}
+
+.protein-big-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.protein-gene-tag {
+  display: inline-block;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+.plain-summary {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+.confidence-pill {
+  text-align: center;
+  background: var(--surface2);
+  border-radius: 16px;
+  padding: 20px 24px;
+  min-width: 130px;
+}
+
+.conf-number {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.conf-number.great { color: var(--green); }
+.conf-number.ok    { color: var(--warn); }
+.conf-number.low   { color: var(--danger); }
+.conf-number.na    { color: var(--text-dim); }
+
+.conf-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* EXPLAIN BOX */
+.explain-box {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin-top: 20px;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+
+.explain-box strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* CONFIDENCE VISUAL */
+.conf-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 480px) { .conf-visual { grid-template-columns: 1fr; } }
+
+.conf-block {
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.conf-block.great { background: var(--green-soft); }
+.conf-block.ok    { background: #fdf5e6; }
+.conf-block.caution { background: #fff0eb; }
+.conf-block.disorder { background: var(--danger-soft); }
+
+.conf-block-pct {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.conf-block.great .conf-block-pct { color: var(--green); }
+.conf-block.ok .conf-block-pct    { color: #8a6a2a; }
+.conf-block.caution .conf-block-pct { color: var(--accent); }
+.conf-block.disorder .conf-block-pct { color: var(--danger); }
+
+.conf-block-label {
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.conf-block-label strong {
+  display: block;
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+/* DISEASE SECTION */
+.disease-banner {
+  background: linear-gradient(135deg, var(--danger-soft), #fff0f0);
+  border: 1px solid #e8c8c8;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 12px;
+}
+
+.disease-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.banner-icon {
+  width: 32px; height: 32px;
+  background: var(--danger);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.banner-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.disease-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.disease-tag {
+  background: rgba(138,42,42,0.1);
+  border: 1px solid rgba(138,42,42,0.2);
+  color: var(--danger);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+}
+
+/* BINDING SITES */
+.site-card {
+  background: var(--surface2);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.site-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: var(--accent-soft);
+}
+
+.site-title {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.site-plain {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.site-residues {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: monospace;
+  letter-spacing: 0.04em;
+}
+
+/* DRUG DISCOVERY SUMMARY */
+.discovery-card {
+  background: linear-gradient(135deg, var(--accent2-soft), #edf5fa);
+  border: 1px solid #c0d8e8;
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.discovery-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 480px) { .score-row { grid-template-columns: 1fr; } }
+
+.score-item {
+  background: rgba(255,255,255,0.7);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.score-value {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.score-value.good  { color: var(--green); }
+.score-value.ok    { color: var(--warn); }
+.score-value.poor  { color: var(--danger); }
+
+.score-label {
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  font-weight: 400;
+}
+
+.discovery-insight {
+  background: rgba(255,255,255,0.6);
+  border-radius: 14px;
+  padding: 20px;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+.discovery-insight p { margin-bottom: 12px; }
+.discovery-insight p:last-child { margin-bottom: 0; }
+.discovery-insight strong { color: var(--text); font-weight: 500; }
+
+/* VARIANTS */
+.variant-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.variant-item:last-child { border-bottom: none; }
+
+.variant-pos {
+  font-family: monospace;
+  font-size: 0.8rem;
+  background: var(--surface2);
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+
+.variant-text {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.variant-change {
+  font-family: monospace;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+  font-size: 0.85rem;
+}
+
+.path-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.path-badge.pathogenic { background: var(--danger-soft); color: var(--danger); }
+.path-badge.likely { background: var(--warn-soft); color: var(--warn); }
+.path-badge.benign { background: var(--green-soft); color: var(--green); }
+.path-badge.vus { background: var(--surface2); color: var(--text-dim); }
+
+/* EXTERNAL LINKS */
+.links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  text-decoration: none;
+  background: var(--surface);
+  transition: all 0.15s;
+  font-weight: 400;
+}
+
+.ext-link:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: var(--accent2-soft);
+}
+
+/* DISCLAIMER */
+.disclaimer {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-top: 8px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+.start-over {
+  text-align: center;
+  padding-top: 12px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="logo-mark">
+      <div class="logo-dot"></div>
+      ProteinLens Guide
+      <div class="logo-dot"></div>
+    </div>
+    <h1>What's happening inside<br><em>your cells?</em></h1>
+    <p class="header-sub">Explore the proteins linked to disease — and what scientists are doing about them.</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="steps-wrap" id="stepsWrap">
+    <div class="step-item active" id="step-ind-1">
+      <div class="step-bubble" id="step-bub-1">1</div>
+      <div class="step-label">Choose<br>a disease</div>
+    </div>
+    <div class="step-line" id="step-line-1"></div>
+    <div class="step-item" id="step-ind-2">
+      <div class="step-bubble" id="step-bub-2">2</div>
+      <div class="step-label">Meet the<br>protein</div>
+    </div>
+    <div class="step-line" id="step-line-2"></div>
+    <div class="step-item" id="step-ind-3">
+      <div class="step-bubble" id="step-bub-3">3</div>
+      <div class="step-label">Structure<br>& confidence</div>
+    </div>
+    <div class="step-line" id="step-line-3"></div>
+    <div class="step-item" id="step-ind-4">
+      <div class="step-bubble" id="step-bub-4">4</div>
+      <div class="step-label">Drug<br>discovery</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: SEARCH -->
+  <div class="card" id="step1-card">
+    <div class="card-eyebrow">Step 1 of 4</div>
+    <div class="card-title">Which disease are you curious about?</div>
+    <p class="card-body">Type a disease or condition below, or pick one of the common examples. We'll find a key protein involved and walk you through the science.</p>
+    <div class="disease-search-wrap">
+      <input class="search-input" type="text" id="diseaseInput" placeholder="e.g. Parkinson's disease, breast cancer, diabetes..." />
+      <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:10px;font-weight:400">50+ conditions covered — browse by category or type anything:</div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Cancer</div>
+      <div class="disease-chips" style="margin-bottom:14px">
+        <div class="disease-chip" onclick="pickDisease(this, 'breast cancer')">Breast cancer</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'lung cancer')">Lung cancer</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'pancreatic cancer')">Pancreatic cancer</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'prostate cancer')">Prostate cancer</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'melanoma')">Melanoma</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'leukaemia')">Leukaemia (CML)</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'colorectal cancer')">Colorectal cancer</div>
+      </div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Neurological</div>
+      <div class="disease-chips" style="margin-bottom:14px">
+        <div class="disease-chip" onclick="pickDisease(this, 'Parkinson\'s disease')">Parkinson's</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'Alzheimer\'s disease')">Alzheimer's</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'ALS')">ALS</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'Huntington\'s disease')">Huntington's</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'multiple sclerosis')">Multiple sclerosis</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'epilepsy')">Epilepsy</div>
+      </div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Mental Health</div>
+      <div class="disease-chips" style="margin-bottom:14px">
+        <div class="disease-chip" onclick="pickDisease(this, 'ADHD')">ADHD</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'depression')">Depression</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'schizophrenia')">Schizophrenia</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'bipolar disorder')">Bipolar disorder</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'autism spectrum')">Autism spectrum</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'anxiety')">Anxiety</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'OCD')">OCD</div>
+      </div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Cardiovascular</div>
+      <div class="disease-chips" style="margin-bottom:14px">
+        <div class="disease-chip" onclick="pickDisease(this, 'heart failure')">Heart failure</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'hypertension')">Hypertension</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'arrhythmia')">Arrhythmia</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'high cholesterol')">High cholesterol</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'cardiomyopathy')">Cardiomyopathy</div>
+      </div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Rare &amp; Genetic</div>
+      <div class="disease-chips" style="margin-bottom:14px">
+        <div class="disease-chip" onclick="pickDisease(this, 'cystic fibrosis')">Cystic fibrosis</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'sickle cell disease')">Sickle cell</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'haemophilia')">Haemophilia</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'phenylketonuria')">PKU</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'Marfan syndrome')">Marfan syndrome</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'Gaucher disease')">Gaucher disease</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'fragile x')">Fragile X</div>
+      </div>
+      <div style="font-size:0.72rem;font-weight:500;color:var(--accent);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase">Infectious &amp; Other</div>
+      <div class="disease-chips">
+        <div class="disease-chip" onclick="pickDisease(this, 'COVID-19')">COVID-19</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'HIV')">HIV</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'tuberculosis')">Tuberculosis</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'rheumatoid arthritis')">Rheumatoid arthritis</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'type 2 diabetes')">Type 2 diabetes</div>
+        <div class="disease-chip" onclick="pickDisease(this, 'obesity')">Obesity</div>
+      </div>
+      <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">Explore this disease →</button>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="status-card" id="statusCard">
+    <div class="spinner"></div>
+    <div class="status-msg" id="statusMsg">Looking up protein data...</div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-card" id="errorCard"></div>
+
+  <!-- RESULTS -->
+  <div id="wizard-results">
+
+    <!-- STEP 2: PROTEIN IDENTITY -->
+    <div class="card" id="step2-card" style="animation-delay:0s">
+      <div class="card-eyebrow">Step 2 of 4 — Meet the protein</div>
+      <div class="protein-identity">
+        <div>
+          <div class="protein-big-name" id="r-name">—</div>
+          <div class="protein-gene-tag" id="r-gene">—</div>
+          <p class="plain-summary" id="r-function">—</p>
+        </div>
+        <div class="confidence-pill">
+          <div class="conf-number na" id="r-plddt">—</div>
+          <div class="conf-tag">structure<br>confidence</div>
+        </div>
+      </div>
+      <div class="explain-box" id="r-conf-explain">—</div>
+      <div class="links-row" id="r-links"></div>
+    </div>
+
+    <!-- STEP 3: STRUCTURE -->
+    <div class="card" id="step3-card" style="animation-delay:0.1s">
+      <div class="card-eyebrow">Step 3 of 4 — Structure & confidence</div>
+      <div class="section-title">🧊 How well do we know its shape?</div>
+      <p class="card-body" style="margin-bottom:20px">Scientists use a score called <strong>pLDDT</strong> to measure how confident the AI model is about each part of the protein's shape. Think of it like GPS accuracy — some regions are pinpointed perfectly, others are fuzzy.</p>
+      <div class="conf-visual" id="r-conf-visual">—</div>
+
+      <hr class="section-divider">
+
+      <!-- Binding sites -->
+      <div class="section-title">🔬 Where do molecules attach?</div>
+      <p class="card-body" style="margin-bottom:16px">Proteins have specific spots where other molecules — like drugs — can attach and change how they work. Scientists have mapped these regions experimentally.</p>
+      <div id="r-binding-sites"><p class="card-body">Loading...</p></div>
+    </div>
+
+    <!-- STEP 4: DRUG DISCOVERY -->
+    <div class="discovery-card" id="step4-card" style="animation-delay:0.2s">
+      <div class="discovery-title">💊 Step 4 of 4 — What does this mean for treatment?</div>
+      <div class="score-row" id="r-scores"></div>
+      <div class="discovery-insight" id="r-insight">—</div>
+    </div>
+
+    <!-- DISEASE SECTION -->
+    <div class="card" id="r-disease-section" style="display:none;animation-delay:0.25s">
+      <div class="section-title">🧬 Known genetic variants</div>
+      <p class="card-body" style="margin-bottom:20px">Some people carry small differences in this gene — called variants — that change how the protein works. Scientists study these to understand why some people develop certain conditions.</p>
+      <div id="r-variants"><p class="card-body">No variants found.</p></div>
+      <div class="disclaimer">⚠️ This information comes from scientific databases and is for educational purposes only. It is not medical advice. If you have questions about your own health or genetics, please speak with a healthcare professional.</div>
+    </div>
+
+    <!-- START OVER -->
+    <div class="start-over">
+      <button class="btn btn-secondary" onclick="resetWizard()">← Start over with a different disease</button>
+    </div>
+
+  </div><!-- /wizard-results -->
+
+</div><!-- /page -->
+
+<script>
+// ─── DISEASE DATABASE ───────────────────────────────────────────────────────
+// Each entry: { id: UniProt accession, reason: plain-English explanation }
+// Keys are lowercase match strings — multiple keys can point to the same entry.
+// Ordered longest-first within categories so specific matches win over generic.
+
+const DISEASE_ENTRIES = {
+
+  // ── CANCER ──────────────────────────────────────────────────────────────
+  "breast cancer":       { id: "P38398", reason: "BRCA1 is a tumour suppressor protein. When its gene is mutated, DNA repair breaks down, dramatically increasing lifetime risk of breast and ovarian cancer. Many targeted therapies (PARP inhibitors) exploit this defect." },
+  "ovarian cancer":      { id: "P38398", reason: "BRCA1 mutations are the leading genetic cause of hereditary ovarian cancer. BRCA1 normally repairs double-strand DNA breaks — without it, cells accumulate mutations that drive tumour growth." },
+  "lung cancer":         { id: "P00533", reason: "EGFR (Epidermal Growth Factor Receptor) is mutated in ~15% of non-small-cell lung cancers. Drugs like erlotinib and osimertinib specifically target these mutations and have transformed treatment." },
+  "non-small cell":      { id: "P00533", reason: "EGFR mutations are the most actionable driver in non-small-cell lung cancer, present in ~15% of cases and targetable with approved tyrosine kinase inhibitors." },
+  "melanoma":            { id: "P15056", reason: "BRAF V600E is mutated in ~50% of melanomas, locking the cell's growth signalling pathway permanently 'on'. Drugs like vemurafenib specifically block this mutant protein." },
+  "pancreatic cancer":   { id: "P01116", reason: "KRAS is mutated in over 90% of pancreatic cancers — one of the highest rates of any tumour type. It was considered 'undruggable' for decades; new covalent inhibitors are finally changing that." },
+  "colorectal cancer":   { id: "P01116", reason: "KRAS mutations drive ~40% of colorectal cancers by keeping the RAS growth-signalling pathway permanently activated. KRAS status also determines whether anti-EGFR therapies will work." },
+  "colon cancer":        { id: "P01116", reason: "KRAS mutations are present in ~40% of colon cancers and are a key factor in treatment planning — patients with KRAS mutations do not respond to certain antibody therapies." },
+  "prostate cancer":     { id: "P10275", reason: "The androgen receptor (AR) drives prostate cancer growth by responding to testosterone and related hormones. Most prostate cancer therapies — from surgical castration to enzalutamide — work by blocking AR signalling." },
+  "chronic myeloid leukaemia": { id: "P00519", reason: "BCR-ABL1 is the fusion protein created by the Philadelphia chromosome translocation. It is a constitutively active kinase that drives CML. Imatinib (Gleevec), which specifically blocks BCR-ABL1, was a landmark moment in targeted cancer therapy." },
+  "leukaemia":           { id: "P00519", reason: "BCR-ABL1 is the defining driver of chronic myeloid leukaemia. Its discovery and the development of imatinib to block it is one of the great success stories of molecular oncology." },
+  "glioblastoma":        { id: "P00533", reason: "EGFR amplification and mutation occur in ~50% of glioblastomas. Despite this, EGFR-targeted therapies have had limited success in brain tumours — an active area of research." },
+  "thyroid cancer":      { id: "P15056", reason: "BRAF V600E mutations occur in ~45% of papillary thyroid cancers, the most common type. BRAF inhibitors are now approved for some advanced thyroid cancers." },
+
+  // ── NEUROLOGICAL ────────────────────────────────────────────────────────
+  "parkinson":           { id: "O15530", reason: "PINK1 is a mitochondrial kinase that acts as a sensor for damaged mitochondria. Loss-of-function mutations cause early-onset familial Parkinson's by preventing cells from clearing faulty mitochondria — a process called mitophagy." },
+  "alzheimer":           { id: "P05067", reason: "APP (Amyloid Precursor Protein) is cleaved by enzymes to produce amyloid-beta peptides. These peptides aggregate into the plaques that accumulate in Alzheimer's brains. Drugs targeting the enzymes that cleave APP (BACE1 inhibitors, gamma-secretase inhibitors) have been a major focus of research." },
+  "huntington":          { id: "P42858", reason: "Huntingtin (HTT) contains a stretch of repeated glutamine units. In Huntington's disease, this repeat is abnormally long, causing the protein to misfold and form toxic aggregates in neurons of the striatum, leading to progressive movement and cognitive decline." },
+  "huntingtons":         { id: "P42858", reason: "Huntingtin (HTT) contains a stretch of repeated glutamine units. In Huntington's disease, this repeat is abnormally long, causing the protein to misfold and form toxic aggregates in neurons, leading to progressive movement and cognitive decline." },
+  "amyotrophic lateral sclerosis": { id: "P00441", reason: "SOD1 (Superoxide Dismutase 1) mutations account for ~20% of familial ALS cases. Mutant SOD1 misfolds and aggregates in motor neurons, triggering cell death. The first gene-silencing therapy for ALS (tofersen) targets SOD1 mRNA." },
+  "als":                 { id: "P00441", reason: "SOD1 mutations cause ~20% of familial ALS. The protein normally neutralises toxic oxygen radicals, but mutant forms aggregate and damage motor neurons. Tofersen, approved in 2023, reduces SOD1 protein levels using antisense oligonucleotides." },
+  "lou gehrig":          { id: "P00441", reason: "SOD1 mutations cause a familial form of ALS (Lou Gehrig's disease). Mutant SOD1 misfolds and aggregates in motor neurons, and is the target of the first approved ALS gene-silencing therapy." },
+  "multiple sclerosis":  { id: "P01375", reason: "TNF (Tumour Necrosis Factor) drives the inflammatory cascades that damage myelin in multiple sclerosis. Anti-TNF biologics are among the most successful drug classes ever developed, though their use in MS is complicated by paradoxical effects." },
+  "ms ":                 { id: "P01375", reason: "TNF drives inflammation that damages the myelin sheath in multiple sclerosis. Understanding TNF biology has been critical to developing immunomodulatory MS therapies." },
+  "epilepsy":            { id: "P35498", reason: "SCN1A encodes the Nav1.1 sodium channel, which controls electrical signalling in inhibitory neurons. Loss-of-function mutations cause Dravet syndrome, a severe childhood epilepsy. Most anti-seizure drugs target sodium channels." },
+  "dravet":              { id: "P35498", reason: "SCN1A is the gene mutated in Dravet syndrome, a severe epilepsy beginning in infancy. Nav1.1 normally dampens neuronal excitability; without it, seizures are frequent and drug-resistant." },
+  "seizure":             { id: "P35498", reason: "SCN1A (Nav1.1) is one of the most important sodium channels for controlling neuronal excitability. Mutations cause various forms of epilepsy, and the channel is a target for many anti-seizure medications." },
+
+  // ── CARDIOVASCULAR ──────────────────────────────────────────────────────
+  "heart disease":       { id: "P02452", reason: "COL1A1 encodes the alpha chain of type I collagen, the main structural protein of the heart and blood vessels. Mutations cause connective tissue disorders that affect cardiovascular integrity, and collagen remodelling is central to heart failure and fibrosis." },
+  "heart failure":       { id: "P12883", reason: "MYH7 (beta-myosin heavy chain) is the motor protein that drives heart muscle contraction. Mutations are the most common cause of hypertrophic cardiomyopathy — the leading cause of sudden cardiac death in young athletes." },
+  "cardiomyopathy":      { id: "P12883", reason: "MYH7 mutations are the most common genetic cause of hypertrophic cardiomyopathy. The first cardiac myosin inhibitor (mavacamten) targeting this protein was approved in 2022." },
+  "hypertrophic":        { id: "P12883", reason: "MYH7 is the primary driver of hypertrophic cardiomyopathy. Mavacamten, the first drug targeting the cardiac myosin mechanism directly, was approved by the FDA in 2022." },
+  "hypertension":        { id: "P00797", reason: "Renin is the enzyme that initiates the renin-angiotensin system, which controls blood pressure by regulating fluid balance and blood vessel tone. Renin inhibitors (like aliskiren) directly block this cascade." },
+  "high blood pressure": { id: "P00797", reason: "Renin kicks off the hormonal cascade that raises blood pressure. Blocking renin is one of several approaches to treating hypertension, alongside ACE inhibitors and angiotensin receptor blockers." },
+  "arrhythmia":          { id: "Q14524", reason: "SCN5A encodes the Nav1.5 cardiac sodium channel, which controls the electrical impulse that makes the heart beat. Mutations cause long QT syndrome, Brugada syndrome, and other life-threatening arrhythmias." },
+  "long qt":             { id: "Q14524", reason: "SCN5A mutations are a major cause of long QT syndrome type 3, in which the heart's electrical repolarisation is prolonged, creating a risk of fatal arrhythmias. Many common drugs are tested for SCN5A effects before approval." },
+  "brugada":             { id: "Q14524", reason: "Loss-of-function mutations in SCN5A cause Brugada syndrome, which can cause sudden cardiac death even in structurally normal hearts. The condition is often triggered by fever or certain medications." },
+  "familial hypercholesterolaemia": { id: "P01130", reason: "The LDL receptor (LDLR) clears bad cholesterol from the blood. Mutations reduce its activity, causing dangerously high LDL cholesterol from birth and early heart attacks. Statins work partly by upregulating LDLR expression." },
+  "familial hypercholesterolemia":  { id: "P01130", reason: "LDLR mutations cause familial hypercholesterolaemia, the most common serious inherited disorder (~1 in 250 people). Without enough functional LDL receptors, cholesterol accumulates in blood vessels." },
+  "high cholesterol":    { id: "P01130", reason: "The LDL receptor (LDLR) removes LDL cholesterol from the bloodstream. Its activity is the central target of statins — the world's most prescribed drug class — and newer PCSK9 inhibitors." },
+  "atherosclerosis":     { id: "P01130", reason: "LDL receptor activity determines how quickly LDL cholesterol is cleared from the blood. Reduced LDLR function leads to LDL accumulation and plaque build-up in artery walls." },
+
+  // ── RARE / GENETIC ───────────────────────────────────────────────────────
+  "cystic fibrosis":     { id: "P13569", reason: "CFTR is a chloride ion channel in the membranes of cells lining the lungs and gut. Mutations (most commonly F508del) cause the channel to misfold or malfunction, leading to thick mucus build-up. Drugs like ivacaftor and elexacaftor directly restore CFTR function." },
+  "sickle cell":         { id: "P68871", reason: "A single amino acid change (E6V) in the beta chain of haemoglobin causes it to polymerise when oxygen levels are low, deforming red blood cells into a sickle shape that blocks blood vessels. Gene therapies that restore fetal haemoglobin expression are now approved." },
+  "haemophilia":         { id: "P00451", reason: "Factor VIII (F8) is a clotting protein. Mutations cause haemophilia A, where blood cannot clot properly after injury. Replacement factor therapy has been the standard of care for decades; gene therapy trials are now showing long-term correction." },
+  "hemophilia":          { id: "P00451", reason: "Factor VIII is essential for forming blood clots. Haemophilia A, caused by F8 mutations, is the most common severe inherited bleeding disorder. Recombinant factor VIII replacement therapy has transformed patient outcomes." },
+  "phenylketonuria":     { id: "P00439", reason: "Phenylalanine hydroxylase (PAH) converts the amino acid phenylalanine into tyrosine. Mutations cause PKU, where phenylalanine builds up to toxic levels in the brain. Newborn screening and dietary restriction have prevented intellectual disability for decades." },
+  "pku":                 { id: "P00439", reason: "PAH mutations cause phenylketonuria (PKU). The enzyme normally breaks down phenylalanine from food; without it, toxic levels accumulate. Sapropterin (a PAH cofactor) and pegvaliase (an enzyme substitute) are approved treatments." },
+  "marfan":              { id: "P35555", reason: "Fibrillin-1 (FBN1) is a structural protein in connective tissue. Mutations cause Marfan syndrome, characterised by tall stature, long limbs, and — most dangerously — aortic aneurysm. Losartan, a blood pressure drug, reduces aortic enlargement by blocking the TGF-beta pathway that fibrillin-1 normally regulates." },
+  "gaucher":             { id: "P04062", reason: "Glucocerebrosidase (GBA) breaks down a fatty molecule called glucocerebroside. Mutations cause Gaucher disease, where this molecule accumulates in organs like the spleen and liver. Enzyme replacement therapy (imiglucerase) has been available since 1994 and is highly effective." },
+  "wilson":              { id: "P35670", reason: "ATP7B is a copper-transporting protein in the liver. Mutations cause Wilson's disease, where copper accumulates in the liver, brain, and eyes. Chelating agents that remove excess copper are the standard treatment." },
+  "wilson disease":      { id: "P35670", reason: "ATP7B mutations prevent the liver from excreting excess copper, causing it to build up to toxic levels. Wilson's disease is one of the few genetic diseases that can be effectively managed with small-molecule drugs." },
+  "haemochromatosis":    { id: "Q30201",  reason: "HFE regulates iron absorption in the gut. Mutations (especially C282Y) cause hereditary haemochromatosis, where the body absorbs far too much iron, damaging the liver, heart, and pancreas over time." },
+  "hemochromatosis":     { id: "Q30201",  reason: "HFE mutations dysregulate iron sensing, causing excess iron absorption. Hereditary haemochromatosis is one of the most common genetic disorders in people of Northern European descent." },
+  "fragile x":           { id: "Q06787", reason: "FMRP (Fragile X Mental Retardation Protein) regulates the translation of many synaptic proteins. Expansion of a CGG repeat in the FMR1 gene silences the gene, causing fragile X syndrome — the most common inherited cause of intellectual disability." },
+  "tuberous sclerosis":  { id: "P46020", reason: "TSC1 (hamartin) forms a complex with TSC2 that inhibits mTOR, a master regulator of cell growth. Mutations cause tuberous sclerosis complex, with benign tumours growing in the brain, kidneys, and lungs. mTOR inhibitors like everolimus are approved for several TSC manifestations." },
+
+  // ── MENTAL HEALTH ────────────────────────────────────────────────────────
+  "adhd":                { id: "Q01959", reason: "The dopamine transporter (DAT/SLC6A3) clears dopamine from synapses in the brain's reward and attention circuits. ADHD is associated with altered DAT activity. Stimulant medications like methylphenidate and amphetamine work by blocking or reversing DAT, increasing synaptic dopamine." },
+  "attention deficit":   { id: "Q01959", reason: "DAT (dopamine transporter) is the primary target of ADHD stimulant medications. By blocking dopamine reuptake, these drugs raise dopamine levels in the prefrontal cortex, improving attention and impulse control." },
+  "autism":              { id: "Q9Y566", reason: "SHANK3 is a scaffolding protein at neuronal synapses that organises the molecular machinery required for synapse function. Mutations or deletions cause Phelan-McDermid syndrome and contribute to autism spectrum disorder by disrupting synaptic signalling." },
+  "autism spectrum":     { id: "Q9Y566", reason: "SHANK3 organises synaptic connections in the brain. Disruptions to SHANK3 impair how neurons communicate, and are one of the strongest single-gene risk factors for autism spectrum disorder identified to date." },
+  "schizophrenia":       { id: "P14416", reason: "The D2 dopamine receptor (DRD2) is the primary target of essentially all antipsychotic medications. The dopamine hypothesis of schizophrenia — that excess dopamine signalling in certain brain regions drives psychosis — centres on DRD2 activity." },
+  "psychosis":           { id: "P14416", reason: "DRD2 is the molecular target of antipsychotic drugs from haloperidol to aripiprazole. Blocking D2 receptors reduces dopamine-driven psychotic symptoms, and DRD2 occupancy by a drug correlates directly with antipsychotic efficacy." },
+  "bipolar":             { id: "Q9Y3Q4", reason: "GSK3-beta is a kinase involved in mood regulation, circadian rhythms, and neurodevelopment. Lithium — the oldest and still one of the most effective bipolar treatments — works partly by inhibiting GSK3-beta, stabilising mood signalling pathways." },
+  "bipolar disorder":    { id: "Q9Y3Q4", reason: "GSK3-beta inhibition by lithium is one of the best-supported molecular mechanisms behind lithium's mood-stabilising effects. GSK3-beta is involved in the same pathways disrupted in bipolar disorder." },
+  "depression":          { id: "P31645", reason: "SERT (Serotonin Transporter / SLC6A4) clears serotonin from synapses. SSRIs — the most prescribed antidepressants — work by blocking SERT, raising serotonin levels. Variants in SLC6A4 influence both depression risk and antidepressant response." },
+  "major depressive":    { id: "P31645", reason: "SERT is the molecular target of SSRIs and SNRIs. The serotonin transporter gene (SLC6A4) is one of the most studied genes in psychiatric genetics, with variants linked to depression susceptibility and treatment response." },
+  "anxiety":             { id: "P31645", reason: "The serotonin transporter (SERT) is the target of SSRIs, which are used to treat both depression and anxiety disorders. Reduced serotonin signalling is associated with heightened anxiety responses." },
+  "ocd":                 { id: "P31645", reason: "SERT is the primary target of SSRIs, which are the first-line pharmacological treatment for OCD. Higher SSRI doses are typically needed for OCD than for depression, suggesting serotonin transport plays a dose-sensitive role." },
+  "ptsd":                { id: "P31645", reason: "SSRIs targeting SERT are the only FDA-approved medications for PTSD. Research into SERT variants may help explain why some people are more susceptible to PTSD after trauma." },
+  "eating disorder":     { id: "P31645", reason: "Serotonin signalling via SERT plays a role in appetite regulation and mood. SSRIs are used in bulimia nervosa treatment, and altered serotonin function has been observed in anorexia nervosa." },
+  "anorexia":            { id: "P31645", reason: "Altered serotonin signalling, involving the SERT transporter, is consistently observed in anorexia nervosa. Serotonin affects both appetite and mood circuits that are disrupted in eating disorders." },
+
+  // ── INFECTIOUS DISEASE ───────────────────────────────────────────────────
+  "covid":               { id: "P0DTD1", reason: "The SARS-CoV-2 main protease (3CLpro) is essential for the virus to replicate — it cleaves viral polyproteins into functional pieces. Nirmatrelvir (in Paxlovid) works by fitting into 3CLpro's active site and blocking this process." },
+  "coronavirus":         { id: "P0DTD1", reason: "3CLpro is conserved across coronaviruses, making it an attractive antiviral target. Structure-based drug design using the AlphaFold and experimental crystal structures of 3CLpro enabled rapid development of Paxlovid." },
+  "sars":                { id: "P0DTD1", reason: "The 3C-like protease is essential for SARS-CoV-2 replication. Its crystal structure was solved within weeks of the pandemic beginning, enabling rapid drug design efforts that led to nirmatrelvir." },
+  "tuberculosis":        { id: "P9WGQ1", reason: "InhA is the primary target of isoniazid, one of the oldest and most important anti-tuberculosis drugs. InhA is a bacterial enzyme involved in mycolic acid synthesis — the fatty acid layer that protects M. tuberculosis from immune attack." },
+  "malaria":             { id: "P04178", reason: "DHFR (dihydrofolate reductase) from Plasmodium falciparum is the target of pyrimethamine and other antimalarial drugs. Mutations in the parasite's DHFR cause drug resistance, a major problem in malaria control." },
+  "hiv":                 { id: "Q72547", reason: "HIV reverse transcriptase converts the virus's RNA genome into DNA so it can integrate into host cells. It is the target of NRTIs and NNRTIs — core components of antiretroviral therapy that has transformed HIV from a fatal disease into a manageable chronic condition." },
+
+  // ── METABOLIC / ENDOCRINE ─────────────────────────────────────────────────
+  "type 1 diabetes":     { id: "P01308", reason: "Insulin (INS) itself is the protein whose production is destroyed by the immune system in type 1 diabetes. Insulin replacement therapy has kept people with type 1 diabetes alive since 1922 — one of medicine's great milestones." },
+  "type 2 diabetes":     { id: "P35557", reason: "Glucokinase (GCK) is the glucose sensor in pancreatic beta cells that triggers insulin release. Mutations cause monogenic diabetes or neonatal hyperinsulinism. GCK activators are a promising therapeutic approach for type 2 diabetes." },
+  "diabetes":            { id: "P35557", reason: "Glucokinase (GCK) acts as the pancreas's glucose meter. When blood sugar rises, GCK activity triggers insulin secretion. GCK activators are in clinical trials for type 2 diabetes." },
+  "obesity":             { id: "P41159", reason: "Leptin is the hormone secreted by fat tissue that signals satiety to the brain's hypothalamus. Rare mutations in LEP cause severe childhood obesity. The success of GLP-1 receptor agonists (like semaglutide) has renewed interest in the leptin pathway." },
+  "hypothyroidism":      { id: "P01241", reason: "GH1 (growth hormone) and related hormones are secreted by the pituitary and regulate metabolism, growth, and thyroid function. Thyroid hormone signalling involves complex protein cascades beginning with TSH receptor activation." },
+  "osteoporosis":        { id: "P04626", reason: "HER2/ERBB2 is involved in bone metabolism signalling, but more directly relevant is RANK/RANKL signalling. The RANKL protein drives osteoclast (bone-degrading cell) activation. Denosumab, a RANKL-blocking antibody, is one of the most effective osteoporosis treatments." },
+
+  // ── IMMUNE / INFLAMMATORY ─────────────────────────────────────────────────
+  "rheumatoid arthritis":{ id: "P01375", reason: "TNF (Tumour Necrosis Factor) is the central driver of joint inflammation in rheumatoid arthritis. Anti-TNF biologics (adalimumab, etanercept, infliximab) were the first targeted treatments for RA and remain the most prescribed class of biological drugs worldwide." },
+  "arthritis":           { id: "P01375", reason: "TNF drives the inflammatory cascade that damages joints in rheumatoid arthritis. Anti-TNF therapies revolutionised treatment and are among the best-selling drugs in pharmaceutical history." },
+  "crohn":               { id: "P01375", reason: "TNF is central to the chronic intestinal inflammation in Crohn's disease. Anti-TNF biologics (infliximab, adalimumab) were the first effective targeted therapies for Crohn's and remain standard of care." },
+  "inflammatory bowel":  { id: "P01375", reason: "TNF drives gut inflammation in Crohn's disease and ulcerative colitis. Blocking TNF with antibody drugs dramatically reduces intestinal inflammation and enables mucosal healing." },
+  "lupus":               { id: "P15514", reason: "Amphiregulin and type I interferons are central to lupus pathology. IFNAR1 (the interferon receptor) is the target of anifrolumab, the first new lupus drug approved in over 60 years." },
+  "asthma":              { id: "P78552", reason: "IL-13 receptor signalling drives airway inflammation and mucus overproduction in asthma. Dupilumab, which blocks IL-4/IL-13 signalling, is approved for severe asthma and has transformed treatment for many patients." },
+  "psoriasis":           { id: "P29460", reason: "IL-12 (and the related IL-23) drives the inflammatory T-cell responses that cause the skin plaques of psoriasis. Ustekinumab, which targets both IL-12 and IL-23, is one of the most effective psoriasis biologics available." },
+};
+
+// ─── ALIAS TABLE ──────────────────────────────────────────────────────────
+// Maps alternate search terms to canonical keys in DISEASE_ENTRIES
+const ALIASES = {
+  "heart attack":          "heart disease",
+  "myocardial infarction": "heart disease",
+  "mi ":                   "heart disease",
+  "hcm":                   "cardiomyopathy",
+  "copd":                  "lung cancer",       // shares EGFR pathway; note in reason
+  "add":                   "adhd",
+  "asd":                   "autism spectrum",
+  "bpd":                   "bipolar disorder",
+  "mdd":                   "major depressive",
+  "ocd":                   "ocd",
+  "anorexia nervosa":      "anorexia",
+  "bulimia":               "eating disorder",
+  "hiv/aids":              "hiv",
+  "aids":                  "hiv",
+  "t1d":                   "type 1 diabetes",
+  "t2d":                   "type 2 diabetes",
+  "cf":                    "cystic fibrosis",
+  "scd":                   "sickle cell",
+  "fh":                    "familial hypercholesterolaemia",
+  "pku":                   "phenylketonuria",
+};
+
+function resolveDisease(query) {
+  const q = query.toLowerCase().trim();
+
+  // 1. Check alias table first
+  for (const [alias, canonical] of Object.entries(ALIASES)) {
+    if (q.includes(alias)) {
+      if (DISEASE_ENTRIES[canonical]) return DISEASE_ENTRIES[canonical];
+    }
+  }
+
+  // 2. Try longest-key match in main entries (avoids "cancer" matching before "lung cancer")
+  const sortedKeys = Object.keys(DISEASE_ENTRIES).sort((a, b) => b.length - a.length);
+  for (const key of sortedKeys) {
+    if (q.includes(key)) return DISEASE_ENTRIES[key];
+  }
+
+  return null;
+}
+
+let selectedDisease = '';
+
+function pickDisease(el, name) {
+  document.querySelectorAll('.disease-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('diseaseInput').value = name;
+  selectedDisease = name;
+}
+
+function setStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const ind = document.getElementById(`step-ind-${i}`);
+    const bub = document.getElementById(`step-bub-${i}`);
+    ind.classList.remove('active', 'done');
+    if (i < n) {
+      ind.classList.add('done');
+      bub.textContent = '✓';
+      if (i < 4) document.getElementById(`step-line-${i}`)?.classList.add('done');
+    } else if (i === n) {
+      ind.classList.add('active');
+      bub.textContent = i;
+    } else {
+      bub.textContent = i;
+    }
+  }
+}
+
+function setStatus(msg) {
+  document.getElementById('statusMsg').textContent = msg;
+  document.getElementById('statusCard').classList.add('visible');
+}
+function hideStatus() { document.getElementById('statusCard').classList.remove('visible'); }
+function showError(msg) {
+  hideStatus();
+  const el = document.getElementById('errorCard');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+function hideError() { document.getElementById('errorCard').classList.remove('visible'); }
+
+async function startSearch() {
+  const query = document.getElementById('diseaseInput').value.trim();
+  if (!query) return;
+  hideError();
+  document.getElementById('searchBtn').disabled = true;
+  document.getElementById('wizard-results').classList.remove('visible');
+
+  const match = resolveDisease(query);
+  if (!match) {
+    showError(`We don't have a curated protein match for "${query}" yet. Try rephrasing — for example "heart failure" instead of "heart attack" — or browse the categories above.`);
+    document.getElementById('searchBtn').disabled = false;
+    return;
+  }
+
+  const { id: uniprotId, reason } = match;
+
+  try {
+    setStatus('Finding the key protein involved...');
+    const upRes = await fetch(`https://rest.uniprot.org/uniprotkb/${uniprotId}?format=json`);
+    if (!upRes.ok) throw new Error('Could not fetch protein data. Please try again.');
+    const up = await upRes.json();
+
+    setStatus('Checking AlphaFold structure confidence...');
+    let afData = null;
+    try {
+      const afRes = await fetch(`https://alphafold.ebi.ac.uk/api/prediction/${uniprotId}`);
+      if (afRes.ok) afData = await afRes.json();
+    } catch(e) {}
+
+    let plddtInfo = null;
+    if (afData && afData[0]) {
+      setStatus('Reading structure confidence scores...');
+      const cifUrl = `https://alphafold.ebi.ac.uk/files/AF-${uniprotId}-F1-model_v4.cif`;
+      try {
+        const cifRes = await fetch(cifUrl);
+        if (cifRes.ok) {
+          const cifText = await cifRes.text();
+          plddtInfo = parsePLDDT(cifText);
+        }
+      } catch(e) {}
+      if (!plddtInfo && afData[0]) {
+        const fallback = Number(afData[0].globalMetricValue || afData[0].confidenceScore || afData[0].plddt);
+        if (Number.isFinite(fallback)) plddtInfo = { avg: fallback, bins: null };
+      }
+    }
+
+    hideStatus();
+    renderWizard(uniprotId, up, plddtInfo, reason, query);
+
+  } catch(err) {
+    showError(`Error: ${err.message}`);
+    document.getElementById('searchBtn').disabled = false;
+  }
+}
+
+function parsePLDDT(cifText) {
+  const lines = cifText.split(/\r?\n/);
+  const hi = lines.findIndex(l => l.trim() === '_ma_qa_metric_local.metric_value');
+  if (hi === -1) return null;
+  const values = [];
+  for (let i = hi + 1; i < lines.length; i++) {
+    const t = lines[i].trim();
+    if (!t || t.startsWith('#') || t.startsWith('_') || t === 'loop_') { if (values.length) break; continue; }
+    const parts = t.match(/(?:'[^']*'|"[^"]*"|\S+)/g);
+    if (!parts || parts.length < 6) continue;
+    const v = Number(parts[5].replace(/['"]/g, ''));
+    if (Number.isFinite(v)) values.push(v);
+  }
+  if (!values.length) return null;
+  const total = values.length;
+  const avg = values.reduce((a, b) => a + b, 0) / total;
+  return {
+    avg,
+    bins: {
+      high: Math.round(values.filter(v => v >= 90).length / total * 100),
+      conf: Math.round(values.filter(v => v >= 70 && v < 90).length / total * 100),
+      low:  Math.round(values.filter(v => v >= 50 && v < 70).length / total * 100),
+      vlow: Math.round(values.filter(v => v < 50).length / total * 100),
+    }
+  };
+}
+
+function renderWizard(uniprotId, up, plddt, reason, query) {
+  setStep(4);
+  document.getElementById('wizard-results').classList.add('visible');
+
+  const name = up.proteinDescription?.recommendedName?.fullName?.value
+    || up.proteinDescription?.submissionNames?.[0]?.fullName?.value
+    || 'Unknown Protein';
+  const gene = up.genes?.[0]?.geneName?.value || uniprotId;
+  const fnText = up.comments?.find(c => c.commentType === 'FUNCTION')?.texts?.[0]?.value || '';
+
+  // --- STEP 2 ---
+  document.getElementById('r-name').textContent = name;
+  document.getElementById('r-gene').textContent = `Gene: ${gene}`;
+
+  // Plain language function
+  const plainFn = fnText
+    ? fnText.slice(0, 220) + (fnText.length > 220 ? '…' : '')
+    : reason;
+  document.getElementById('r-function').textContent = plainFn;
+
+  // pLDDT badge
+  const avg = plddt?.avg;
+  const scoreEl = document.getElementById('r-plddt');
+  if (avg !== undefined && avg !== null && Number.isFinite(avg)) {
+    scoreEl.textContent = avg.toFixed(0);
+    scoreEl.className = 'conf-number ' + (avg >= 80 ? 'great' : avg >= 65 ? 'ok' : 'low');
+  } else {
+    scoreEl.textContent = 'N/A';
+    scoreEl.className = 'conf-number na';
+  }
+
+  // Explain box
+  let explainText = '';
+  if (!avg || !Number.isFinite(avg)) {
+    explainText = 'No AlphaFold structural model is available for this protein. This may mean it is too difficult to predict reliably, or it has not yet been included in the database.';
+  } else if (avg >= 80) {
+    explainText = `A score of ${avg.toFixed(0)} out of 100 means the AI has high confidence in this protein's shape. This is great news for drug discovery — scientists can study the structure in detail to find places where a drug molecule could fit.`;
+  } else if (avg >= 65) {
+    explainText = `A score of ${avg.toFixed(0)} means the AI is moderately confident in the overall shape, but some parts are less certain. Scientists can still use this structure, but treat some regions with caution.`;
+  } else {
+    explainText = `A score of ${avg.toFixed(0)} suggests significant parts of this protein are disordered — they don't have a fixed shape. This is actually common and sometimes biologically important, but it makes drug design more challenging.`;
+  }
+  document.getElementById('r-conf-explain').textContent = explainText;
+
+  // Links
+  document.getElementById('r-links').innerHTML = `
+    <a class="ext-link" href="https://www.uniprot.org/uniprotkb/${uniprotId}" target="_blank">↗ Full protein record</a>
+    <a class="ext-link" href="https://alphafold.ebi.ac.uk/entry/${uniprotId}" target="_blank">↗ 3D structure viewer</a>
+    <a class="ext-link" href="https://www.ncbi.nlm.nih.gov/clinvar/?term=${encodeURIComponent(gene)}[gene]" target="_blank">↗ Genetic variants (ClinVar)</a>
+  `;
+
+  // --- STEP 3: CONF VISUAL ---
+  const bins = plddt?.bins;
+  const confVisual = document.getElementById('r-conf-visual');
+  if (bins) {
+    confVisual.innerHTML = `
+      <div class="conf-block great">
+        <div class="conf-block-pct">${bins.high}%</div>
+        <div class="conf-block-label"><strong>Very well mapped</strong>Regions with the highest confidence. Reliable for detailed analysis.</div>
+      </div>
+      <div class="conf-block ok">
+        <div class="conf-block-pct">${bins.conf}%</div>
+        <div class="conf-block-label"><strong>Mostly mapped</strong>Good confidence. The backbone shape is generally trustworthy.</div>
+      </div>
+      <div class="conf-block caution">
+        <div class="conf-block-pct">${bins.low}%</div>
+        <div class="conf-block-label"><strong>Flexible regions</strong>Low confidence. These parts may move around a lot in real life.</div>
+      </div>
+      <div class="conf-block disorder">
+        <div class="conf-block-pct">${bins.vlow}%</div>
+        <div class="conf-block-label"><strong>Disordered</strong>Very low confidence. These regions likely have no fixed shape.</div>
+      </div>
+    `;
+  } else if (avg && Number.isFinite(avg)) {
+    confVisual.innerHTML = `<div class="explain-box" style="grid-column:1/-1">Overall confidence score of <strong>${avg.toFixed(1)}</strong> — detailed per-region breakdown not available for this protein.</div>`;
+  } else {
+    confVisual.innerHTML = `<div class="explain-box" style="grid-column:1/-1">No AlphaFold structure available for per-region confidence breakdown.</div>`;
+  }
+
+  // Binding sites
+  const features = up.features || [];
+  const sites = features.filter(f => ['Active site','Binding site','Metal binding','Site'].includes(f.type));
+  const seq = up.sequence?.value || '';
+  const siteIcons = { 'Active site': '⚡', 'Binding site': '🔗', 'Metal binding': '⚙️', 'Site': '📍' };
+  const sitePlain = {
+    'Active site': 'This is where the chemical reaction actually happens — the protein\'s most critical spot.',
+    'Binding site': 'A region where another molecule (like a drug or substrate) can physically attach.',
+    'Metal binding': 'This spot holds a metal ion like zinc or iron, which the protein needs to function properly.',
+    'Site': 'A functionally important region identified by researchers.',
+  };
+
+  const bsEl = document.getElementById('r-binding-sites');
+  if (!sites.length) {
+    bsEl.innerHTML = `<div class="explain-box">No experimentally confirmed binding sites are recorded in the database for this protein yet. This doesn't mean they don't exist — it may mean they haven't been studied in enough detail.</div>`;
+  } else {
+    const grouped = {};
+    sites.forEach(s => { if (!grouped[s.type]) grouped[s.type] = []; grouped[s.type].push(s); });
+    bsEl.innerHTML = Object.entries(grouped).map(([type, entries]) => {
+      const residues = entries.map(e => {
+        const pos = e.location?.start?.value;
+        const aa = pos && seq ? seq[pos-1] : '?';
+        return `${aa}${pos||'?'}`;
+      }).join('  ');
+      return `<div class="site-card">
+        <div class="site-icon">${siteIcons[type] || '📍'}</div>
+        <div>
+          <div class="site-title">${type} <span style="font-size:0.8rem;color:var(--text-dim);font-weight:300">(${entries.length} residue${entries.length > 1 ? 's' : ''})</span></div>
+          <div class="site-plain">${sitePlain[type] || ''}</div>
+          <div class="site-residues">Residues: ${residues}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // --- STEP 4: DRUG DISCOVERY ---
+  const diseases = up.comments?.filter(c => c.commentType === 'DISEASE') || [];
+  const variants = features.filter(f => f.type === 'Natural variant' && f.description);
+  const pathogenicCount = variants.filter(v => /pathogenic/i.test(v.description)).length;
+
+  // Druggability score inputs
+  const structureScore = !avg || !Number.isFinite(avg) ? 'poor' : avg >= 75 ? 'good' : avg >= 60 ? 'ok' : 'poor';
+  const bindingScore = sites.length > 3 ? 'good' : sites.length > 0 ? 'ok' : 'poor';
+  const variantScore = pathogenicCount > 5 ? 'good' : pathogenicCount > 0 ? 'ok' : 'poor';
+
+  document.getElementById('r-scores').innerHTML = `
+    <div class="score-item">
+      <div class="score-value ${structureScore}">${structureScore === 'good' ? '✓' : structureScore === 'ok' ? '~' : '?'}</div>
+      <div class="score-label">Structure quality<br><span style="font-size:0.7rem;color:var(--text-dim)">${avg && Number.isFinite(avg) ? `pLDDT ${avg.toFixed(0)}` : 'No model'}</span></div>
+    </div>
+    <div class="score-item">
+      <div class="score-value ${bindingScore}">${bindingScore === 'good' ? '✓' : bindingScore === 'ok' ? '~' : '?'}</div>
+      <div class="score-label">Known binding sites<br><span style="font-size:0.7rem;color:var(--text-dim)">${sites.length} annotated</span></div>
+    </div>
+    <div class="score-item">
+      <div class="score-value ${variantScore}">${variantScore === 'good' ? '✓' : variantScore === 'ok' ? '~' : '?'}</div>
+      <div class="score-label">Disease variants<br><span style="font-size:0.7rem;color:var(--text-dim)">${pathogenicCount} pathogenic</span></div>
+    </div>
+  `;
+
+  // Plain English insight
+  const insightLines = [];
+  insightLines.push(`<p><strong>Why does this protein matter for ${query}?</strong><br>${reason}</p>`);
+
+  if (sites.length > 0) {
+    insightLines.push(`<p>Scientists have identified <strong>${sites.length} binding site${sites.length > 1 ? 's' : ''}</strong> on this protein. These are the targets drug designers focus on — finding a molecule that fits like a key into one of these locks, either blocking or boosting the protein's activity.</p>`);
+  } else {
+    insightLines.push(`<p>No confirmed binding sites have been recorded for this protein yet, which makes traditional drug design harder. Researchers may be looking at indirect approaches, like targeting nearby proteins in the same pathway.</p>`);
+  }
+
+  if (avg && Number.isFinite(avg) && avg >= 70) {
+    insightLines.push(`<p>The AlphaFold model is <strong>reliable</strong> for this protein, meaning researchers can use computational tools to virtually screen thousands of drug-like molecules against its structure — speeding up the discovery process enormously.</p>`);
+  } else if (!avg || !Number.isFinite(avg)) {
+    insightLines.push(`<p>Without a reliable 3D structure, drug discovery relies more on experimental methods like X-ray crystallography — slower but essential for proteins that are difficult to predict computationally.</p>`);
+  }
+
+  if (diseases.length > 0) {
+    const diseaseNames = diseases.map(d => d.disease?.diseaseId || 'related condition').slice(0, 3).join(', ');
+    insightLines.push(`<p>This protein is linked to: <strong>${diseaseNames}</strong>. Understanding exactly how mutations in this protein cause disease helps researchers design treatments that restore normal function.</p>`);
+  }
+
+  document.getElementById('r-insight').innerHTML = insightLines.join('');
+
+  // Variants table
+  const variantEl = document.getElementById('r-variants');
+  const diseased = variants.filter(v => !/in dbsnp/i.test(v.description)).slice(0, 12);
+  if (diseased.length) {
+    document.getElementById('r-disease-section').style.display = 'block';
+    variantEl.innerHTML = diseased.map(v => {
+      const pos = v.location?.start?.value || '?';
+      const orig = v.alternativeSequence?.originalSequence || '?';
+      const alt = v.alternativeSequence?.alternativeSequences?.[0] || '?';
+      const desc = v.description?.replace(/\{[^}]*\}/g, '').replace(/in dbsnp[^;]*/ig, '').replace(/;\s*/g, ' ').trim() || '';
+
+      let cls = 'vus', label = 'Under study';
+      if (/pathogenic/i.test(desc)) { cls = 'pathogenic'; label = 'Disease-causing'; }
+      else if (/likely pathogenic/i.test(desc)) { cls = 'likely'; label = 'Likely harmful'; }
+      else if (/benign/i.test(desc)) { cls = 'benign'; label = 'Harmless variant'; }
+
+      const plainDesc = desc.slice(0, 120) || 'Associated with disease — details under investigation.';
+
+      return `<div class="variant-item">
+        <div class="variant-pos">Pos. ${pos}</div>
+        <div class="variant-text">
+          <div class="variant-change">${orig} → ${alt}</div>
+          ${plainDesc}
+        </div>
+        <div class="path-badge ${cls}">${label}</div>
+      </div>`;
+    }).join('');
+  } else {
+    document.getElementById('r-disease-section').style.display = 'none';
+  }
+
+  document.getElementById('searchBtn').disabled = false;
+}
+
+function resetWizard() {
+  document.getElementById('wizard-results').classList.remove('visible');
+  document.getElementById('diseaseInput').value = '';
+  document.querySelectorAll('.disease-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('searchBtn').disabled = false;
+  setStep(1);
+  hideError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('diseaseInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startSearch();
+});
+
+function setStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const ind = document.getElementById(`step-ind-${i}`);
+    const bub = document.getElementById(`step-bub-${i}`);
+    ind.classList.remove('active','done');
+    const line = document.getElementById(`step-line-${i}`);
+    if (line) line.classList.remove('done');
+    if (i < n) {
+      ind.classList.add('done');
+      bub.textContent = '✓';
+      if (line) line.classList.add('done');
+    } else if (i === n) {
+      ind.classList.add('active');
+      bub.textContent = i;
+    } else {
+      bub.textContent = i;
+    }
+  }
+}
+</script>
+</body>
+</html>
